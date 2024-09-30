@@ -77,7 +77,7 @@
 [#- endif #]
 
 % At least three keywords are required at submission. Please provide three to five keywords, separated by the pipe symbol.
-[# if doc.keyword -#]
+[# if doc.keywords -#]
 \keywords{[- doc.keywords | join(" $|$ ") -]}
 [#- else -#]
 \keywords{Use the \texttt{keywords} field in the front matter to specify 3-5 keywords.}
