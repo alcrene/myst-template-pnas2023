@@ -1,0 +1,145 @@
+\documentclass[9pt,twocolumn,twoside
+[#- if options.draft #],draft[# endif -#]
+]{pnas-new}
+% Use the lineno option to display guide line numbers if required.
+
+[# if options.template_type == "research_article" #]
+\templatetype{pnasresearcharticle}
+[# elif options.template_type == "mathematics" #]
+\templatetype{pnasmathematics}
+[# elif options.template_type == "invited" #]
+\templatetype{pnasinvited}
+[# endif #]
+% {pnasresearcharticle} = Template for a two-column research article
+% {pnasmathematics} %= Template for a one-column mathematics article
+% {pnasinvited} %= Template for a PNAS invited submission
+
+
+\setboolean{shortarticle}{[- "true" if options.short_article else "false" -]}
+\setboolean{singlecolumn}{[- "true" if options.single_column else "false" -]}
+
+
+[- IMPORTS -]
+
+\begin{document}
+\title{[-doc.title-]}
+
+
+% Use letters for affiliations, numbers to show equal authorship (if applicable) and to indicate the corresponding author
+[# set equalauthor, corrauthor = 0 #]
+[# for author in doc.authors #]
+\author[
+  [-- author.affiliations|join(",", "letter")|lower --]
+  %# PNAS uses numbers both to indicate corresponding authors and equal contributions
+  %% In theory this allows specifying many groups of equal contrib authors, but since MyST doesn’t have a syntax for this, we give all equal contrib authors the same number.
+  %% Thus in the end if both equalauthor and corrauthor are set, one is 1 and the other is 2 #%
+  [#- if author.corresponding and corrauthor == 0 -#][#- set corrauthor = equalauthor+1 -#][#- endif -#]
+  [#- if author.equal_contributor and equalauthor == 0 -#][#- set equalauthor = corrauthor+1 -#][#- endif -#]
+  %# Now that we have possibly incremented the numerical superscripts, add them.
+  %% Either corrauthor or equalauthor could be the smallest value, so we need to sort them. #%
+  [#- if author.corresponding and author.equal_contributor -#]
+    ,[-- [equalauthor, corrauthor]|sort|join(",") --]
+  [#- elif author.corresponding -#]
+    ,[-- corrauthor --]
+  [#- elif author.equal_contributor -#]
+    ,[-- equalauthor --]
+  [#- endif -#]
+]{[--author.name--]}
+[# endfor #]
+
+[# for affiliation in doc.affiliations #]
+\affil[[- affiliation.letter|lower -]]{[- affiliation.value.name -]}
+[# endfor #]
+
+
+% Please give the surname of the lead author for the running footer
+\leadauthor{[--doc.authors[0].surname--]}
+
+% Please add a significance statement to explain the relevance of your work
+\significancestatement{
+    [-- parts.summary | default("Use a \\texttt{plain\\_language\\_summary} part to provide a 120-word maximum statement about the significance of the research paper written at a level understandable to an undergraduate educated scientist outside their field of speciality. The primary goal of the significance statement is to explain the relevance of the work in broad context to a broad readership. The significance statement appears in the paper itself and is required for all research papers.") --]
+}
+
+% Please include corresponding author, author contribution and author declaration information
+\authorcontributions{
+    [-- parts.author_contributions | default("Use a \\texttt{contributions} part to provide details of each author’s contributions.") --]}
+\authordeclaration{
+    [-- parts.declaration | default("Use a \\texttt{declaration} part to declare any competing interests.") --]}
+[# if authorequal > 0 -#]
+\equalauthors{\textsuperscript{[- authorequal -]}
+    [-- doc.authors | selectattr("equal_contributor") | join(",") --]
+    contributed equally to this work with A.T.
+[#- endif #]
+[# if corrauthor > 0 -#]
+\correspondingauthor{\textsuperscript{[- corrauthor -]}To whom correspondence should be addressed. E-mail: [- doc.authors | selectattr("corresponding") | join(",", "email") -]}
+[# else #]
+\correspondingauthor{Specify the corresponding author(s) by adding \texttt{corresponding: true} their entrie(s) in the frontmatter.}
+[#- endif #]
+
+% At least three keywords are required at submission. Please provide three to five keywords, separated by the pipe symbol.
+[# if doc.keyword -#]
+\keywords{[- doc.keywords | join(" $|$ ") -]}
+[#- else -#]
+\keywords{Use the \texttt{keywords} field in the front matter to specify 3-5 keywords.}
+[# endif #]
+
+\begin{abstract}
+[- parts.abstract | default("Use an \\texttt{abstract} part to provide an abstract of no more than 250 words in a single paragraph. Abstracts should explain to the general reader the major contributions of the article. References in the abstract must be cited in full within the abstract itself and cited in the text.") -]
+\end{abstract}
+
+\dates{This manuscript was compiled on \today}
+\doi{\url{www.pnas.org/cgi/doi/10.1073/pnas.XXXXXXXXXX}}
+
+
+\maketitle
+\thispagestyle{firststyle}
+[# if options.short_article and options.single_column #]
+\abscontentformatted
+[# elif options.short_article #]
+\abscontent
+[# endif #]
+
+\Firstpage %# Sets the column widths like \firstpage, minus the paragraph counting voodoo #%
+
+% If your first paragraph (i.e. with the \dropcap) contains a list environment (quote, quotation, theorem, definition, enumerate, itemize...), the line after the list may have some extra indentation. If this is the case, add \parshape=0 to the end of the list environment.
+[# if parts.firstpage #]
+\dropcap{[- parts.firstpage|first -]}[- parts.firstpage.slice(1) | replace("section{", "section*{") -]
+[# else #]
+\dropcap{U}se a \texttt{firstpage} part to indicate the main text content which should be placed here on the first page.
+[# endif #]
+
+\Secondpage  % Reset columnwidth & co. to the standard 2-column lengths
+
+[- CONTENT | replace("section{", "section*{") -]
+
+
+\matmethods{[- parts.matmethods | replace("section{", "section*{") | default("Given the content which is part of  material and methods the part 'matmethods' so that it is placed and typeset appropriately.") -]
+}
+
+\showmatmethods{} % Display the Materials and Methods section
+
+\acknow{[- parts.acknowledgments | default("Write your acknowledgments as a single paragraph, provided within an \\texttt{acknowledgments} part.") -]}
+
+\showacknow{} % Display the acknowledgments section
+
+
+[# if not options.leftbibitems -#]
+\bibsplit[2]  % The \bibsplit command MUST be present, other the document won’t compile.
+% It is used to split the references from the body of the text.
+% The value in brackets is the number of references in the left column.
+% Use the template option 'leftbibitems' specify this number for your document.
+[#- else -#]
+\bibsplit[[-options.leftbibitems-]]  % The \bibsplit command MUST be present, other the document won’t compile.
+% It is used to split the references from the body of the text.
+% The value in brackets is the number of references in the left column.
+[#- endif #]
+
+% Bibliography
+[# if doc.bibliography #]
+\bibliography{[- doc.bibliography | join(", ") -]}
+[#- else -#]
+Use the \texttt{bibliography} field in the frontmatter to specify the location to one or more bibtex files.
+\label{LastPage}  % pnas-new.cls modifies \bibliography to add this label. It is used for formatting the footer.
+[# endif #]
+
+\end{document}

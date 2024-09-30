@@ -1,0 +1,175 @@
+jtex: v1
+title: PNAS research report
+description: Template for preparing a research report submission to PNAS
+version: 1.0.0
+license: MIT
+source: https://www.pnas.org/author-center/submitting-your-manuscript
+thumbnail: ./thumbnail.png
+authors:
+  - name: Alexandre René
+    website: https://arene.ca
+    affiliations:
+      - RWTH Aachen
+tags:
+  - paper
+parts:
+  - id: abstract
+    description: >
+      The abstract should be a single paragraph of no more than 250 words.
+      It should explain to the general reader the major contributions of the
+      article. References in the abstract must be cited in full within the
+      abstract itself and cited in the text.
+  - id: summary
+    max_words: 120
+    description: >
+      A 120-word maximum statement about the significance of the research,
+      written at a level understandable to an undergraduate educated scientist
+      outside their field of speciality.
+  - id: firstpage
+    title: Main text content to place on first page
+    description: >
+      The PNAS template uses a special wide-column layout for the first page,
+      and for this it needs to know where the first page’s contents end –
+      to know where to insert the commands which reset to the default layout.
+  - id: matmethods
+    description: >
+      Use this part to describe your materials and methods. This can be more
+      than one paragraph, and may contain subsections and equations as required.
+  - id: acknowledgments
+    description: >
+      Acknowledgments should form a single paragraph.
+      Please do not include any acknowledgments in the Supporting Information,
+      or anywhere else in the manuscript.
+  - id: author_contributions
+    description: >
+      Provide details of author contributions here, for example
+      "A and B conceived the research project. A performed the experiments
+      and analysis. A and B wrote the manuscript together."
+      This is the same information as in the `roles` field, but in full
+      sentences.
+  - id: declaration
+    description: >
+      Declare here any competing interests.
+
+doc:
+  - id: title
+    required: true
+  - id: bibliography
+  - id: authors
+  - id: affiliations
+  - id: keywords
+options:
+  - id: draft
+    type: boolean
+    description: Mark the document as draft
+  - id: short_article
+    type: boolean
+    default: true
+    description: >
+      The PNAS template has variants for “short” and “long” articles, with
+      slight layout differences. For example, for short articles the abstract
+      is placed within the first column, while for long articles it is placed
+      above the main text, in a wide paragraph spanning the entire page width.
+      (These variants are in addition to the three types `research_article`,
+      `mathematics` and `invited`.)
+  - id: single_column
+    type: boolean
+    default: false
+    description: >
+      The PNAS template has variants for single and double column layouts.
+  - id: template_type
+    type: choice
+    choices:
+      - research_article
+      - mathematics
+      - invited
+    default: research_article
+    description: >
+      The PNAS template defines three types `research_article`, `mathematics`
+      and `invited`. By far the most common is `research_article`; authors who
+      should use one of the other types likely know this already. +
+      research_article: Two-column research article + mathematics: One-column
+      mathematics article + invited: PNAS invited submission
+  # - id: firstpagepars
+  #   title: First paragraph of second page
+  #   type: string
+  #   max_chars: 2
+  #   default: "2"
+  #   description: >
+  #     Use `firstpagepars` to indicate which paragraph will start the second page
+  #     and subsequent formatting. Heading levels count as paragraphs. For
+  #     example, if there are 11 paragraphs on the first page (counting the first
+  #     level heading) as a paragraph, then you should provide `firstpagepars=12`
+  #     since the second page starts on the 12-the paragraph. You can leave this
+  #     value unset during writing and only adjust it during the manuscript’s
+  #     final preparation stage.
+  # - id: firstpagelines
+  #   title: First line of second page
+  #   type: string
+  #   max_chars: 3
+  #   description: >
+  #     If a paragraph runs over from the first to the second page, use
+  #     `firstpagelines` to indicate the paragraph line number starting the second
+  #     page. E.g. if the first three lines of the 11-th paragraph appear on the
+  #     first page, provide `firstpagelines=4`. This value is optional (by default
+  #     formatting assumes that the second page starts with the beginning of a
+  #     paragraph). You can leave this value unset during writing and only adjust
+  #     it, if necessary, during the manuscript’s final preparation stage.
+  - id: leftbibitems
+    title: No. of bibliography items in left column
+    type: string
+    max_chars: 2
+    description: >
+      The bibliography is formatted in two columns starting immediately below
+      the main text. Use this option to specify how many items to include before
+      that first column break.
+files:
+  - template.tex
+  - jabbrv-ltwa-all.ldf
+  - jabbrv-ltwa-en.ldf
+  - jabbrv.sty
+  - pnas-new.bst
+  - pnas-new.cls
+  - pnasresearcharticle.sty
+packages:
+  - afterpage
+  - algorithm
+  - algpseudocode
+  - amsfonts
+  - amsmath
+  - amssymb
+  - authblk
+  - babel
+  - booktabs
+  - changepage
+  - colortbl
+  - cuted
+  - draftwatermark
+  - enumitem
+  - etoolbox
+  - fancyhdr
+  - float
+  - footmisc
+  - graphicx
+  - helvet
+  - hyperref
+  - ifpdf
+  - ifxetex
+  - inputenc
+  - jabbrv
+  - kvoptions
+  - lastpage
+  - lettrine
+  - lmodern
+  - marginnote
+  - mdframed
+  - microtype
+  - natbib
+  - sidecap
+  - stfloats
+  - textcomp
+  - tikz
+  - titlesec
+  - xcolor
+  - xifthen
+myst: v1
