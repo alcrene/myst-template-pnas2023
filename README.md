@@ -10,16 +10,17 @@ Template for preparing a research report submission to PNAS
 
 ## Bugs & Todos
 
-* Compilation
+* Latex
   - How can we specify to use `pdflatex`? This is what the PNAS template expects.
-    - Calling `myst build --pdf` uses XeTeX, which does not correctly format
+    + Calling `myst build --pdf` uses XeTeX, which does not correctly format
       the headings. (They are inlined and formatted like normal text.)
   - Whatever generates `main.bib` does not preserve the formatting exactly.
     In the template’s example, `&` is escaped in the source bib but not in the
     exported `main.bib`. This breaks compilation with `pdflatex`.
   - Add an option for displaying line numbers.  
     (The PNAS documents a lineno option, but it doesn’t seem to do anything
-    – and everything related in the .cls file is commented out…)
+    + and everything related in the .cls file is commented out…)
+  - The `.sty` files for two template types are missing (`pnasmathematics` and `pnasinvited`).
 
 * Layout
   - The column on the first page should be wider
@@ -50,6 +51,7 @@ Template for preparing a research report submission to PNAS
 
 * Turn off section numbering
   - Currently this doesn’t even work with `headings: false` in the frontmatter.
+    (The inserted commands are still `\section` instead of `\section*`.)
   - Ideally it would be done by default, so that unless the author specifies otherwise, equations/figures/tables are numbered, but not sections. 
   - HACK: In the template I force this with a `.replace` filter on `CONTENT` and `matmethods`, a hyperref error screws up compilation.
 
@@ -59,6 +61,10 @@ Template for preparing a research report submission to PNAS
   + This seems to be an error in the template: `pnas-new.cls` modifies the `\bibliography` command to also insert this label.
 
 ## Limitations
+
+### Other templates
+
+PNAS has separate templates for “Brief Report” and “SI Appendix” which we don’t cover.
 
 ### First page
 The PNAS template defines a `\firstpage` macro, which must be called _before_ the main text and does some LaTeX voodoo to change the layout commands after a set number of pagraphs. However in my experience this is unreliable: it works on Overleaf, but not when I compile on my local machine. Plus, it makes LaTeX’s errors even more opaque than usual, because it relies on the experimental `\afterpage` package, which moves rendering (and therefore also rendering errors) away from their source.
@@ -97,7 +103,9 @@ information but as a paragraph with full sentences.
 
 ## Other notes
 
-The PNAS template is quite fragile: the plain, out-of-the-box template works on Overleaf, but when I download it and compile it locally I get a different output: columns may be the wrong width, text the wrong colour. Compiling with XeTeX inlines headings with no visually distinctive style (in contrast to a pdflatex build which formats them in bold as expected).[^why-fragile]
+### Fragile source template
+
+The PNAS template is quite fragile: the plain, out-of-the-box template works on Overleaf, but when I download it and compile it locally I get a different output: columns were the wrong width, text the wrong colour. Compiling with XeTeX inlines headings with no visually distinctive style (in contrast to a pdflatex build which formats them in bold as expected).[^why-fragile]
 
 This template makes some changes to the underlying `pnas-new.cls` and `pnasresearcharticle.sty` which should make the output more robust – essentially the class file does very fancy but also fragile things, and where possible we replace  these with jtex’ templating logic which should be more robust. We don’t want to deviate too far from the official template, so as not to cause friction when it comes to ultimately submitting the manuscript, but even within that constraint there is likely room for further improvements on this template’s portability and robustness.
 
