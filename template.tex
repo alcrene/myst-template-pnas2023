@@ -103,17 +103,17 @@
 
 % If your first paragraph (i.e. with the \dropcap) contains a list environment (quote, quotation, theorem, definition, enumerate, itemize...), the line after the list may have some extra indentation. If this is the case, add \parshape=0 to the end of the list environment.
 [# if parts.firstpage #]
-\dropcap{[- parts.firstpage|first -]}[- parts.firstpage.slice(1) | replace("section{", "section*{") -]
+\dropcap{[- parts.firstpage|first -]}[- parts.firstpage.slice(1) | replace("section{", "section*{") | replace("caption*{", "caption{") -]
 [# else #]
 \dropcap{U}se a \texttt{firstpage} part to indicate the main text content which should be placed here on the first page.
 [# endif #]
 
 \Secondpage  % Reset columnwidth & co. to the standard 2-column lengths
 
-[- CONTENT | replace("section{", "section*{") -]
+[- CONTENT | replace("section{", "section*{") | replace("caption*{", "caption{")  -]
 
 
-\matmethods{[- parts.matmethods | replace("section{", "section*{") | default("Given the content which is part of  material and methods the part 'matmethods' so that it is placed and typeset appropriately.") -]
+\matmethods{[- parts.matmethods | replace("section{", "section*{") | replace("caption*{", "caption{") | default("Given the content which is part of  material and methods the part \\texttt{matmethods} so that it is placed and typeset appropriately.") -]
 }
 
 \showmatmethods{} % Display the Materials and Methods section

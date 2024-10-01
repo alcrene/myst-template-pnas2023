@@ -28,15 +28,18 @@ Template for preparing a research report submission to PNAS
 * Figures
   - Specify positioning options `[!htbp]`
   - Default positioning should be unspecified
+  - Use `\caption` instead of `\caption*`
+    + At least when I pass `numbering: figure: true`, I get unnumbered captions.
+    + HACK: For now there is a hard-coded filter in the template which replaces `\caption*{` with `\caption{`.
   - Support the `SCFigure` environment
-      + Ideally via an option to the figure directive
+    + Ideally via an option to the figure directive
 
 * Tables
   - Specify positioning options `[!htbp]`
   - Default positioning should be [`t!]`
   - Default format should just use `{lrc}`, no `dimexpr`
   - Use `\caption` instead of `\caption*`
-    + `\caption*` is not even plain LaTeX2e, so likely to not play well with at least some journal classes. (It’s usually provided by either the caption or longtables package.)
+    + I’m not sure `\caption*` is even plain LaTeX2e? So might not play well with at least some journal classes. (It’s usually provided by either the _caption_ or _longtables_ package.)
   - Use `\midrule` instead of `\hline`
     (The PNAS class imports booktabs.)
   - Support `\addtabletext` for adding text below tables.
